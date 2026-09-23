@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 /** 文件目录详细信息弹窗字段 */
 const DIR_DETAIL_FIELDS = [

@@ -353,7 +353,7 @@ import EsignListDialog from './components/esign-list-dialog.vue'
 import EsignDetailDialog from './components/esign-detail-dialog.vue'
 import RollDetailView from './components/roll-detail-view.vue'
 import FileManageView from './components/file-manage-view.vue'
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 // 档案分类树（静态演示数据：柯桥至诸暨高速公路工程）
 const TREE_DATA = [

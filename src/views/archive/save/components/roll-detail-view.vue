@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 /** 卷内目录 mock（与截图一致的 7 条） */
 const CATALOG_ROWS = [

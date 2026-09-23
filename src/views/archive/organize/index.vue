@@ -472,7 +472,7 @@ const MOCK_FILE_DIR = [
 /** 文件明细 mock */
 const MOCK_FILE_LIST = []
 
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 import CollectDialog from './components/collect-dialog.vue'
 import TransferDialog from './components/transfer-dialog.vue'
 

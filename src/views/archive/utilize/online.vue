@@ -291,7 +291,7 @@
 import RollCatalogDialog from './components/roll-catalog-dialog.vue'
 import FileCatalogDialog from './components/file-catalog-dialog.vue'
 import AddFileDialog from './components/add-file-dialog.vue'
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 // 在线利用记录演示数据（与截图一致，共12条）
 const RECORDS = [
   { id: 1, status: '审核通过', name: '财审补充', startDate: '2026-07-27', endDate: '2026-08-23', way: '查阅', purpose: '财审补充', attachment: '', remark: '', creator: '柯诸业主测试(勿选)', createTime: '2026-07-27 17:10:33', path: '' },

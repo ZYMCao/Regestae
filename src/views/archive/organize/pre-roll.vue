@@ -308,7 +308,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 import RollSearchDialog from './components/roll-search-dialog.vue'
 import FileSearchDialog from './components/file-search-dialog.vue'
 import RollEditDialog from './components/roll-edit-dialog.vue'

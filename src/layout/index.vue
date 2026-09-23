@@ -69,7 +69,7 @@ export default {
       fixedHeader: true,   // 头部是否固定
       needTagsView: true,  // 是否显示标签页导航
       // 系统标题（与环境变量保持一致）
-      title: process.env.VUE_APP_TITLE || '电子档案管理系统',
+      title: import.meta.env.VITE_TITLE || '电子档案管理系统',
       // 当前所属项目/参建单位（切换后更新显示）
       projectName: '柯桥至诸暨高速公路工程.绍兴市柯诸高速公路有限公司',
       projectSwitchVisible: false, // 项目切换弹窗显隐

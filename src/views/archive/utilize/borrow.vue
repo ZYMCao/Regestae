@@ -289,7 +289,7 @@
 import RollCatalogDialog from './components/roll-catalog-dialog.vue'
 import FileCatalogDialog from './components/file-catalog-dialog.vue'
 import AddFileDialog from './components/add-file-dialog.vue'
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 const RECORDS = [
   { id: 1, status: '审核通过', name: '俞文杰借阅专项检测招标文件、合同', way: '拷贝电子文件', startDate: '2026-08-14', endDate: '2026-08-21', purpose: '借阅', attachment: '', creator: '张鲁莎', createTime: '2026-08-14 16:59:29', remark: '', nodePath: '' },
   { id: 2, status: '审核通过', name: '苟可借阅500KV塔基临时便道资料', way: '拷贝电子文件', startDate: '2026-08-06', endDate: '2026-08-13', purpose: '借阅', attachment: '', creator: '张鲁莎', createTime: '2026-08-06 12:36:09', remark: '', nodePath: '' },

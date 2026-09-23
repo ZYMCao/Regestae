@@ -119,7 +119,7 @@ export default {
       }
     }
     return {
-      title: process.env.VUE_APP_TITLE || '电子档案管理系统',
+      title: import.meta.env.VITE_TITLE || '电子档案管理系统',
       codeUrl: '',            // 验证码图片（base64）
       captchaEnabled: false,  // 是否开启验证码（获取接口成功后置为 true）
       loginForm: {
@@ -150,8 +150,8 @@ export default {
     }
   },
   created() {
-    // DEMO 模式（VUE_APP_USE_MOCK=true）不请求验证码接口，避免后端未就绪时弹出网络错误提示
-    if (process.env.VUE_APP_USE_MOCK !== 'true') {
+    // DEMO 模式（VITE_USE_MOCK=true）不请求验证码接口，避免后端未就绪时弹出网络错误提示
+    if (import.meta.env.VITE_USE_MOCK !== 'true') {
       this.getCode()
     }
   },

@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 // 档案分类树（静态演示数据，与档案库管理一致）
 const TREE_DATA = [

@@ -57,9 +57,9 @@ import '@/styles/index.scss' // 全局样式
 
 // ---------------- 环境信息 ----------------
 // 获取环境变量示例：
-//   process.env.VUE_APP_BASE_API  -> 接口前缀
-//   process.env.VUE_APP_TITLE     -> 系统标题
-//   process.env.NODE_ENV          -> development / production
+//   import.meta.env.VITE_BASE_API -> 接口前缀
+//   import.meta.env.VITE_TITLE    -> 系统标题
+//   import.meta.env.MODE          -> development / production / test
 
 Vue.use(ElementUI, {
   locale: zhLocale,

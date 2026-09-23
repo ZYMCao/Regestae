@@ -1,3 +1,5 @@
+import router from '@/router'
+
 /**
  * tagsView 模块：标签页导航状态管理
  * visitedViews: 已访问页面列表（渲染标签）
@@ -165,7 +167,7 @@ const actions = {
       })
     }
     // 从 permission 模块的 routes 中提取（已包含静态+动态）
-    const allRoutes = routes || require('@/router').default.options.routes || []
+    const allRoutes = routes || router.options.routes || []
     findAffix(allRoutes)
     affixTags.forEach(tag => commit('ADD_VISITED_VIEW', tag))
   }

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>logo.svg">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" href="logo.svg">
+    <title>%VITE_TITLE%</title>
     <!-- 高德地图 JS API 2.0 -->
     <script src="https://webapi.amap.com/maps?v=2.0&key=fea62bb861772a9e3691faf9ad2d9d51"></script>
   </head>
@@ -14,6 +14,7 @@
       <strong>本系统需要启用 JavaScript 才能正常运行，请开启浏览器 JavaScript 支持。</strong>
     </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <!-- Vite 入口：开发时直接加载源码，构建时自动替换为打包产物 -->
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

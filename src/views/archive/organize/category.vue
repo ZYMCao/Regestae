@@ -541,7 +541,7 @@ const WBS_LEVEL_LIST = [
   { id: 'w4', name: '子分项工程', items: [] }
 ]
 
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 export default {
   name: 'ArchiveOrganizeCategory',

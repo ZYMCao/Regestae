@@ -360,7 +360,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 
 /** 档案审核记录 mock（与截图一致：1 条"测试"记录） */
 const MOCK_RECORDS = [

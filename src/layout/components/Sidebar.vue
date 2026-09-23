@@ -69,7 +69,7 @@ export default {
       return !this.sidebar.opened || this.device === 'mobile'
     },
     title() {
-      return process.env.VUE_APP_TITLE || '电子档案管理系统'
+      return import.meta.env.VITE_TITLE || '电子档案管理系统'
     },
     variables() {
       return menuVariables

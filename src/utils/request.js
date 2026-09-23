@@ -18,7 +18,7 @@ function showError(msg) {
 // 创建 axios 实例
 const service = axios.create({
   // .env 中配置的接口前缀（/dev-api、/test-api、/prod-api）
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_BASE_API,
   timeout: 15000 // 请求超时 15s
 })
 

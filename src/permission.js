@@ -46,8 +46,8 @@ router.beforeEach(async (to, from, next) => {
 
   // 设置浏览器标签页标题
   document.title = (to.meta && to.meta.title)
-    ? `${to.meta.title} - ${process.env.VUE_APP_TITLE}`
-    : process.env.VUE_APP_TITLE || ''
+    ? `${to.meta.title} - ${import.meta.env.VITE_TITLE}`
+    : import.meta.env.VITE_TITLE || ''
 
   const hasToken = getToken()
 

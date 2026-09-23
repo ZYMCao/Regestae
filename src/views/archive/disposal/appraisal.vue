@@ -197,7 +197,7 @@
 </template>
 
 <script>
-import AdaptiveActions from '@/components/AdaptiveActions'
+import AdaptiveActions from '@/components/AdaptiveActions/index.vue'
 import RollCatalogSelectDialog from './components/roll-catalog-select-dialog.vue'
 import FileCatalogSelectDialog from './components/file-catalog-select-dialog.vue'
 

@@ -4,11 +4,11 @@ import { resetRouter } from '@/router'
 import { defineModule } from '@/store/module-helper'
 
 /**
- * 静态 DEMO 开关：环境变量 VUE_APP_USE_MOCK=true 时，登录/用户信息/退出
+ * 静态 DEMO 开关：环境变量 VITE_USE_MOCK=true 时，登录/用户信息/退出
  * 均不请求后端接口，使用本地模拟数据（后端未就绪时的演示模式）。
- * 后端联调时把 .env.development 中 VUE_APP_USE_MOCK 改为 false 即可恢复真实接口。
+ * 后端联调时把 .env.development 中 VITE_USE_MOCK 改为 false 即可恢复真实接口。
  */
-const USE_MOCK = process.env.VUE_APP_USE_MOCK === 'true'
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
 // DEMO 模拟用户：admin 拥有全部角色/权限（permission.js 中 admin 放行全部动态路由）
 const MOCK_USER = {

@@ -282,13 +282,13 @@ export default {
       this.currentRow = row || null
     },
     viewPdf() {
-      window.open('assets/document/quality-file.pdf')
+      window.open('quality-file.pdf')
     },
     viewMetadata() {
-      window.open('assets/document/weepal-file.xml')
+      window.open('weepal-file.xml')
     },
     viewProcess() {
-      window.open('assets/document/ViewMetaXml.xml')
+      window.open('ViewMetaXml.xml')
     },
     viewCollectInfo() {
       const row = this.currentRow

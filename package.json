@@ -4,41 +4,42 @@
   "description": "电子档案管理系统 - 后台管理前端（Vue2 + Element UI）",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "dev:test": "vue-cli-service serve --mode test",
-    "build:prod": "vue-cli-service build --mode production",
-    "build:test": "vue-cli-service build --mode test",
-    "preview": "vue-cli-service preview",
+    "dev": "vite",
+    "dev:test": "vite --mode test",
+    "build:prod": "vite build --mode production",
+    "build:test": "vite build --mode test",
+    "preview": "vite preview",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "axios": "0.28.0",
-    "core-js": "3.37.1",
-    "element-ui": "2.15.6",
-    "js-cookie": "3.0.5",
+    "axios": "~0",
+    "core-js": "~3",
+    "element-ui": "~2",
+    "js-cookie": "~3",
     "nprogress": "0.2.0",
-    "vue": "2.6.14",
-    "vue-router": "3.6.5",
-    "vuex": "3.6.2"
+    "vue": "~2",
+    "vue-router": "~3",
+    "vuex": "~3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "5.0.8",
-    "@vue/cli-plugin-eslint": "5.0.8",
-    "@vue/cli-service": "5.0.8",
-    "eslint": "7.32.0",
-    "eslint-plugin-vue": "7.20.0",
-    "sass": "1.32.13",
-    "sass-loader": "12.6.0",
-    "script-ext-html-webpack-plugin": "^2.1.5",
-    "vue-template-compiler": "^2.6.14"
+    "@vitejs/plugin-vue2": "^2",
+    "eslint": "^7",
+    "eslint-plugin-vue": "^7",
+    "sass": "^1",
+    "vite": "^7"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=20",
+    "npm": ">=8"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "@parcel/watcher@2.6.0": true,
+    "fsevents@2.3.3": true
+  }
 }

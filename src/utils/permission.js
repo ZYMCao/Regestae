@@ -1,3 +1,5 @@
+import store from '@/store'
+
 /**
  * 权限相关工具
  */
@@ -11,7 +13,6 @@
  */
 export function checkPermission(value) {
   if (value && value instanceof Array && value.length > 0) {
-    const store = require('@/store').default
     const roles = store.state.user.roles
     const permissions = store.state.user.permissions
 
@@ -31,7 +32,6 @@ export function checkPermission(value) {
  */
 export function checkRole(value) {
   if (value && value instanceof Array && value.length > 0) {
-    const store = require('@/store').default
     const roles = store.state.user.roles
     return roles.some(role => value.includes(role))
   }
