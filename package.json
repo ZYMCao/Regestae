@@ -3,14 +3,7 @@
   "version": "1.0.0",
   "description": "电子档案管理系统 - 后台管理前端（Vue2 + Element UI）",
   "private": true,
-  "scripts": {
-    "dev": "vite",
-    "dev:test": "vite --mode test",
-    "build:prod": "vite build --mode production",
-    "build:test": "vite build --mode test",
-    "preview": "vite preview",
-    "lint": "eslint --ext .js,.vue src"
-  },
+  "scripts": {},
   "dependencies": {
     "axios": "~0",
     "core-js": "~3",
