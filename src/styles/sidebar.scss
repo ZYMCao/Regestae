@@ -1,0 +1,156 @@
+// 侧边栏样式（全局；白色背景 + 蓝色图标风格）
+.app-wrapper {
+  // 布局骨架（sidebar 与 main-container 由 .app-body 承担 flex 布局）
+  position: relative;
+  height: 100%;
+
+  .sidebar-container {
+    width: $sideBarWidth !important;
+    height: 100%; // .app-body 已扣除系统标题栏 60px
+    background-color: $menuBg;
+    transition: width 0.28s;
+    flex-shrink: 0;
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.06);
+    display: flex;
+    flex-direction: column;
+
+    .el-scrollbar {
+      height: calc(100% - 90px); // 减去 logo 50px + 底部收缩按钮 40px
+      flex: 1;
+      min-height: 0;
+    }
+
+    .scrollbar-wrapper {
+      overflow-x: hidden !important;
+    }
+  }
+
+  .main-container {
+    flex: 1;
+    min-width: 0; // 防止 flex 子项溢出
+    display: flex;
+    flex-direction: column;
+  }
+
+  // 收起状态
+  &.hideSidebar {
+    .sidebar-container {
+      width: $sideBarCollapsedWidth !important;
+    }
+
+    // 折叠时 logo 只显示图标
+    .sidebar-logo {
+      .sidebar-title {
+        display: none;
+      }
+    }
+  }
+
+  // 移动端：侧边栏绝对定位覆盖（在系统标题栏下方展开）
+  &.mobile {
+    .sidebar-container {
+      position: fixed;
+      top: 60px; // 系统标题栏高度
+      left: 0;
+      height: calc(100% - 60px) !important;
+      z-index: 1001;
+      transition: transform 0.28s;
+    }
+    &.hideSidebar .sidebar-container {
+      transform: translateX(-100%);
+      width: $sideBarWidth !important;
+    }
+  }
+
+  &.withoutAnimation {
+    .sidebar-container,
+    .main-container,
+    .fixed-header {
+      transition: none;
+    }
+  }
+}
+
+// ===== 菜单风格（白底、蓝色图标、灰字） =====
+.sidebar-container .el-menu {
+  background-color: $menuBg;
+  border-right: none;
+
+  .el-menu-item,
+  .el-submenu .el-submenu__title {
+    height: 46px;
+    line-height: 46px;
+    color: $menuText;
+    font-size: 14px;
+
+    // 蓝色图标
+    i {
+      color: $menuIconColor;
+    }
+
+    &:hover {
+      background-color: $menuHover !important;
+    }
+
+    // 选中态：浅蓝背景 + 蓝字
+    &.is-active {
+      color: $menuActiveText !important;
+      background-color: $menuActiveBg !important;
+    }
+  }
+
+  // 嵌套子菜单：灰底缩进
+  .el-menu--inline {
+    background-color: #fafbfc !important;
+
+    .el-menu-item {
+      background-color: #fafbfc !important;
+      padding-left: 53px !important; // 图标位缩进
+
+      &:hover {
+        background-color: $menuHover !important;
+      }
+
+      &.is-active {
+        color: $menuActiveText !important;
+        background-color: $menuActiveBg !important;
+      }
+    }
+  }
+
+  // 折叠态：菜单项居中只显示图标（el-menu--collapse 与 .el-menu 同元素，需用 & 连接）
+  &.el-menu--collapse {
+    .el-menu-item,
+    .el-submenu .el-submenu__title {
+      padding: 0 16px !important;
+      text-align: center;
+
+      i {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// 折叠态弹出子菜单（popper 渲染在 body 下，需独立全局选择器）
+.el-menu--vertical .el-menu--popup {
+  min-width: 160px;
+
+  .el-menu-item {
+    background-color: #fff;
+    color: $menuText;
+
+    i {
+      color: $menuIconColor;
+    }
+
+    &:hover {
+      background-color: $menuHover;
+    }
+
+    &.is-active {
+      color: $menuActiveText;
+      background-color: $menuActiveBg;
+    }
+  }
+}

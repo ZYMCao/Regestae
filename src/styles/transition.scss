@@ -1,0 +1,25 @@
+// 全局过渡动画
+
+// 路由切换（fade-transform 在 AppMain 中使用，Vue2 class 命名）
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.3s;
+}
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+// 淡入
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.28s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}

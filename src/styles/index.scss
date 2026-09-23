@@ -1,0 +1,91 @@
+// 全局基础样式入口
+@import './variables.scss';
+@import './sidebar.scss';
+@import './transition.scss';
+@import './element-override.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  font-size: 14px;
+  color: #303133;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100%;
+}
+
+// 滚动条美化
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c0c4cc;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// 通用工具类
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+
+// 表格页通用：操作按钮区
+.table-toolbar {
+  margin-bottom: 12px;
+  @include flex-row(space-between, center);
+
+  .toolbar-left {
+    @include flex-row(flex-start, center);
+    .el-button + .el-button {
+      margin-left: 8px;
+    }
+  }
+}
+
+// 分页容器
+.pagination-wrap {
+  padding: 12px 0;
+  text-align: right;
+}
+
+// 主容器
+.app-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.toolbar {
+  .el-input__inner {
+    height: 26px;
+    line-height: 26px;
+  }
+  .el-input__icon {
+    height: 26px;
+    line-height: 26px;
+  }
+  .el-input__prefix {
+    height: 26px;
+    line-height: 26px;
+  }
+}

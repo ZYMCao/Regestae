@@ -1,0 +1,143 @@
+// Element UI 全局覆盖（自定义主题的轻量方案：不重新编译主题，直接覆盖变量产物）
+// 完整的主题定制方案见 styles/README 或文档：
+//   方案A（推荐，简单）：这里直接覆盖关键样式
+//   方案B（彻底）：element-theme 重新编译 theme-chalk，替换 src/styles/element-theme/
+
+// 统一圆角与阴影
+.el-button {
+  border-radius: 3px;
+}
+
+// 统一按钮高度为 30px（默认/mini/small 尺寸均覆盖）
+.el-button {
+  padding: 0 15px;
+  height: 26px;
+  line-height: 26px;
+  font-size: 13px;
+
+  &.el-button--mini {
+    padding: 0 12px;
+  }
+
+  // 图标按钮（只有图标无文字）
+  &.is-circle {
+    width: 26px;
+    padding: 0;
+  }
+
+  // 按钮内图标垂直居中
+  i {
+    line-height: 26px;
+  }
+}
+
+.left-search {
+  .el-input {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: 12px;
+  }
+
+  .el-input__inner {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: 12px;
+  }
+
+  .el-input__icon {
+    line-height: 26px;
+  }
+
+  .el-input-group__append {
+    line-height: 24px;
+  }
+}
+
+// 统一输入框/下拉框高度为 26px（el-select、日期选择等基于 el-input 的组件自动继承）
+.search-input {
+  .btn-search {
+    padding-top: 0 !important;
+  }
+  .el-input {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: 12px;
+  }
+
+  .el-input__inner {
+    height: 26px !important;
+    line-height: 26px !important;
+    font-size: 12px;
+  }
+
+  // 输入框前后内置图标（清空、密码、下拉箭头等）垂直居中
+  .el-input__icon {
+    line-height: 26px;
+  }
+
+  // 日期范围选择器（结构特殊，单独对齐）
+  .el-range-editor.el-input__inner {
+    height: 26px;
+
+    .el-range-separator {
+      line-height: 20px;
+    }
+
+    .el-range__icon,
+    .el-range__close-icon {
+      line-height: 26px;
+    }
+  }
+}
+
+
+
+// 表格头部背景
+.el-table th.el-table__cell {
+  background-color: #f5f7fa;
+  color: #606266;
+  font-weight: 600;
+}
+
+// 统一表格：行高默认 34px、字号 13px（默认/small/mini 尺寸均生效）
+// 单元格高度 = 上下 padding 5px + 行高 23px + 下边框 1px = 34px
+.el-table {
+  font-size: 13px !important;
+
+  th.el-table__cell,
+  td.el-table__cell {
+    padding: 5px 0 !important;
+  }
+
+  .el-table__cell .cell {
+    line-height: 23px;
+  }
+}
+
+// 弹窗圆角
+.el-dialog {
+  border-radius: 6px;
+
+  .el-dialog__header {
+    border-bottom: 1px solid #ebeef5;
+    padding: 16px 20px;
+  }
+  .el-dialog__body {
+    padding: 20px;
+  }
+  .el-dialog__footer {
+    border-top: 1px solid #ebeef5;
+    padding: 12px 20px;
+  }
+}
+
+// 卡片头部统一
+.el-card__header {
+  padding: 14px 20px;
+  font-weight: 600;
+}
+
+// 下拉菜单项图标对齐
+.el-dropdown-menu__item i {
+  margin-right: 6px;
+}
