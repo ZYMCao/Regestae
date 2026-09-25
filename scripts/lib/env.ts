@@ -5,6 +5,7 @@ import process from "node:process";
 
 export const repoRoot = path.resolve(import.meta.dirname, "../..");
 
+/* eslint-disable no-comments/disallowComments */
 // macOS pitfall: os.hostname() is "Foo" or "Foo.local" depending on `scutil --get HostName`;
 // .env files use bare LocalHostName, so fix with `scutil --set HostName <bare>`.
 export const HOST_ENV = os.hostname();

@@ -1,0 +1,17 @@
+{
+	"plugins": ["unicorn", "typescript", "oxc"],
+	"rule": {
+		"no-comments/disallowComments": "error",
+		"no-explicit-any": "warn",
+		"no-restricted-imports": ["error", { "patterns": [{ "group": ["@regestae/*/src", "@regestae/*/src/**"] }] }],
+		"no-unused-vars": [
+			"error",
+			{
+				"args": "none",
+				"varsIgnorePattern": "^_",
+				"caughtErrorsIgnorePattern": "^_",
+				"fix": { "imports": "safe-fix" }
+			}
+		]
+	}
+}

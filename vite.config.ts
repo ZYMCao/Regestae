@@ -1,5 +1,6 @@
 import { defineConfig } from "vite-plus";
-import { deriveTasks } from "./scripts/lib/task.ts";
+import { derivePlugins, deriveRules } from "./scripts/lib/lint.ts";
+import { deriveTasks } from "./scripts/lib/run.ts";
 
 export default defineConfig({
 	oxc: {
@@ -26,25 +27,18 @@ export default defineConfig({
 	lint: {
 		ignorePatterns: ["apps/demo/**", "libs/i18n/src/paraglide/**"],
 		options: { typeAware: true, typeCheck: true },
+		plugins: derivePlugins("rules"),
 		jsPlugins: [
 			{
 				name: "eslint-js",
 				specifier: "oxlint-plugin-eslint",
 			},
+			{
+				name: "no-comments",
+				specifier: "eslint-plugin-no-comments",
+			},
 		],
-		rules: {
-			"no-unused-vars": [
-				"error",
-				{
-					args: "none",
-					varsIgnorePattern: "^_",
-					caughtErrorsIgnorePattern: "^_",
-					fix: { imports: "safe-fix" },
-				},
-			],
-			"no-explicit-any": "warn",
-			"no-restricted-imports": ["error", { patterns: [{ group: ["@regestae/*/src", "@regestae/*/src/**"] }] }],
-		},
+		rules: deriveRules("rules"),
 	},
 	run: {
 		cache: {
