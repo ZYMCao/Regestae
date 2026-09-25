@@ -9,10 +9,10 @@ export default defineConfig({
 		},
 	},
 	staged: {
-		"*": ["vp check --fix"], // vpr (not raw bun): vp injects its managed bun; hook env lacks bun on PATH
+		"*": ["vp check --fix"],
 	},
 	fmt: {
-		ignorePatterns: ["apps/demo/**", "dist/**"],
+		ignorePatterns: ["apps/demo/**"],
 		useTabs: true,
 		singleQuote: false,
 		trailingComma: "all",
@@ -24,7 +24,7 @@ export default defineConfig({
 		sortPackageJson: false,
 	},
 	lint: {
-		ignorePatterns: ["apps/demo/**"],
+		ignorePatterns: ["apps/demo/**", "libs/i18n/src/paraglide/**"],
 		options: { typeAware: true, typeCheck: true },
 		jsPlugins: [
 			{
@@ -43,7 +43,7 @@ export default defineConfig({
 				},
 			],
 			"no-explicit-any": "warn",
-			"no-restricted-imports": ["error", { patterns: [{ group: ["@electronic-archive/*/src", "@electronic-archive/*/src/**"] }] }],
+			"no-restricted-imports": ["error", { patterns: [{ group: ["@regestae/*/src", "@regestae/*/src/**"] }] }],
 		},
 	},
 	run: {
