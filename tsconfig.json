@@ -1,0 +1,24 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "bundler",
+		"verbatimModuleSyntax": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "es2022",
+		"module": "ESNext",
+		"lib": ["es2022", "dom", "esnext.asynciterable"],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"types": ["node", "bun"],
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"allowImportingTsExtensions": true,
+		"noEmit": true
+	},
+	"exclude": ["node_modules"]
+}

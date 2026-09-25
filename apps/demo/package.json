@@ -1,0 +1,18 @@
+{
+  "name": "@electronic-archive/demo",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "axios": "~0",
+    "element-ui": "~2",
+    "js-cookie": "~3",
+    "nprogress": "~0",
+    "vue": "~2",
+    "vue-router": "~3",
+    "vuex": "~3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue2": "^2",
+    "sass": "^1"
+  }
+}
