@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { loadLocalEnv, repoRoot } from "../lib/env.ts";
-import { runProcess } from "../lib/runner.ts";
+import { runProcess } from "../lib/spawn.ts";
 import { parseServeArgs, resolveApp } from "../lib/serve.ts";
 
 const PREVIEW_APP = "monolithic";
@@ -14,7 +14,7 @@ async function main() {
 	const { app: appInput, env, port, passthrough } = parseServeArgs(process.argv.slice(2));
 	const app = resolveApp(appInput);
 	if (app !== PREVIEW_APP) {
-		console.error(`Error: '${app}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/build/build.ts to make it previewable.`);
+		console.error(`Error: '${app}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/app/build.ts to make it previewable.`);
 		process.exit(1);
 	}
 

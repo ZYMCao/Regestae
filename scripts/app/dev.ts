@@ -1,7 +1,7 @@
 import path from "node:path";
 import process from "node:process";
 import { loadLocalEnv, repoRoot } from "../lib/env.ts";
-import { runProcess } from "../lib/runner.ts";
+import { runProcess } from "../lib/spawn.ts";
 import { parseServeArgs, resolveApp, viteBin } from "../lib/serve.ts";
 
 async function main() {
