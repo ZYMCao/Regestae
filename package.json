@@ -10,7 +10,7 @@
 		]
 	},
 	"devDependencies": {
-		"@effect/platform-node": "4.0.0-rc.117",
+		"@effect/platform-node": "^4.0.0-rc.0",
 		"@effect/tsgo": "0.45.0",
 		"@types/bun": "~1",
 		"@types/node": "~24",
@@ -30,8 +30,8 @@
 		"vite-plus": "1.0.0-rc.0"
 	},
 	"dependencies": {
-		"@effect/platform-bun": "4.0.0-rc.117",
-		"effect": "4.0.0-rc.117"
+		"@effect/platform-bun": "^4.0.0-rc.0",
+		"effect": "^4.0.0-rc.0"
 	},
 	"engines": {
 		"node": ">=24"
