@@ -1,5 +1,6 @@
 {
 	"compileOnSave": false,
+	"$schema": "./node_modules/@effect/tsgo/schema.json",
 	"compilerOptions": {
 		"rootDir": ".",
 		"sourceMap": true,
@@ -18,7 +19,8 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"allowImportingTsExtensions": true,
-		"noEmit": true
+		"noEmit": true,
+		"plugins": [{ "name": "@effect/language-service", "diagnostics": false }]
 	},
 	"exclude": ["node_modules"]
 }

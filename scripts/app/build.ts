@@ -42,28 +42,28 @@ export const checkServerOutput = (targetDir: string) =>
 	Effect.gen(function* () {
 		const fs = yield* FileSystem.FileSystem;
 		const path = yield* Path.Path;
-		if (!(yield* fs.exists(targetDir))) return yield* failWith(`Error: server output directory not found: ${targetDir}`);
+		if (!(yield* fs.exists(targetDir))) return yield* failWith(`[build] server output directory not found: ${targetDir}`);
 		const files = yield* walkMjs(targetDir);
-		if (files.length === 0) return yield* failWith(`Error: no .mjs modules found under ${targetDir}`);
+		if (files.length === 0) return yield* failWith(`[build] no .mjs modules found under ${targetDir}`);
 
 		const results = yield* Effect.forEach(files, check, { concurrency: CHECK_CONCURRENCY });
 		const failures = results.filter((result) => result.code !== 0).map((result) => ({ file: result.file, message: result.output.split("\n").slice(0, 6).join("\n") }));
 
 		if (failures.length > 0) {
-			yield* Console.error(`Error: ${failures.length}/${files.length} server modules failed node --check. Build output is not servable.`);
-			yield* Effect.forEach(failures, ({ file, message }) => Console.error(`--- ${path.relative(repoRoot, file)}\n${message}`), { discard: true });
-			return yield* failWith(`Error: ${failures.length}/${files.length} server modules failed node --check`);
+			yield* Console.error(`[build] ${failures.length}/${files.length} server modules failed node --check. Build output is not servable.`);
+			yield* Effect.forEach(failures, ({ file, message }) => Console.error(`[build] --- ${path.relative(repoRoot, file)}\n${message}`), { discard: true });
+			return yield* failWith(`[build] ${failures.length}/${files.length} server modules failed node --check`);
 		}
 
-		yield* Console.log(`Server output gate: ${files.length} modules passed node --check.`);
+		yield* Console.log(`[build] server output gate: ${files.length} modules passed node --check.`);
 	});
 
 const run = (cmd: string, args: string[], cwd: string) =>
 	Effect.gen(function* () {
 		const path = yield* Path.Path;
-		yield* Console.log(`$ ${cmd} ${args.join(" ")}  (cwd: ${path.relative(repoRoot, cwd) || "."})`);
+		yield* Console.log(`[build] $ ${cmd} ${args.join(" ")}  (cwd: ${path.relative(repoRoot, cwd) || "."})`);
 		yield* runProcess({ cmd, args, cwd });
-	}).pipe(Effect.catchTag("TaskFailure", (error) => Console.error(`Error: ${cmd} ${args.join(" ")} exited with code ${error.code}`).pipe(Effect.andThen(Effect.fail(error)))));
+	}).pipe(Effect.catchTag("TaskFailure", (error) => Console.error(`[build] ${cmd} ${args.join(" ")} exited with code ${error.code}`).pipe(Effect.andThen(Effect.fail(error)))));
 
 const command = Command.make("build", {}, () =>
 	Effect.gen(function* () {

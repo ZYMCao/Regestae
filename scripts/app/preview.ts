@@ -17,7 +17,7 @@ const command = Command.make("preview", { app: appFlag, env: envFlag, port: port
 	Effect.gen(function* () {
 		const resolved = yield* resolveApp(Option.getOrUndefined(app));
 		if (resolved !== PREVIEW_APP) {
-			return yield* failWith(`Error: '${resolved}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/app/build.ts to make it previewable.`);
+			return yield* failWith(`[preview] '${resolved}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/app/build.ts to make it previewable.`);
 		}
 
 		const path = yield* Path.Path;
@@ -25,7 +25,7 @@ const command = Command.make("preview", { app: appFlag, env: envFlag, port: port
 		const entry = path.join(serverDir, "index.mjs");
 		const fs = yield* FileSystem.FileSystem;
 		if (!(yield* fs.exists(entry))) {
-			return yield* failWith(`Error: missing build output at ${path.relative(repoRoot, entry)}. Run 'vp run build' first.`);
+			return yield* failWith(`[preview] missing build output at ${path.relative(repoRoot, entry)}. Run 'vp run build' first.`);
 		}
 
 		const envVars = yield* loadEnvironmentProfile(env);

@@ -40,5 +40,5 @@ export const resolveApp = (input: string | undefined) =>
 		const match = matchApp(input, [...apps]);
 		if ("app" in match) return match.app;
 		const hint = match.matches.length > 1 ? ` Ambiguous prefix, matches: ${match.matches.join(", ")}.` : "";
-		return yield* failWith(`Error: Unknown app '${match.input ?? "<missing --app>"}'.${hint} Available apps (apps/*/vite.config.ts): ${apps.join(", ")}`);
+		return yield* failWith(`[apps] unknown app '${match.input ?? "<missing --app>"}'.${hint} Available apps (apps/*/vite.config.ts): ${apps.join(", ")}`);
 	});
