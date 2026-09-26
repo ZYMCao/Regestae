@@ -51,14 +51,36 @@ export interface CaptureProcessOptions {
 	cmd: string;
 	args: string[];
 	cwd?: string;
+	env?: Record<string, string>;
 }
 
-export const runProcessCapture = (options: CaptureProcessOptions) =>
+const concatChunks = (chunks: ReadonlyArray<Uint8Array>): Uint8Array => {
+	let total = 0;
+	for (const chunk of chunks) total += chunk.length;
+	const result = new Uint8Array(total);
+	let offset = 0;
+	for (const chunk of chunks) {
+		result.set(chunk, offset);
+		offset += chunk.length;
+	}
+	return result;
+};
+
+export const runProcessCaptureBytes = (options: CaptureProcessOptions) =>
 	Effect.scoped(
 		Effect.gen(function* () {
 			const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
-			const handle = yield* spawner.spawn(ChildProcess.make(options.cmd, options.args, { cwd: options.cwd ?? repoRoot, extendEnv: true }));
-			const [stdout, stderr, exitCode] = yield* Effect.all([handle.stdout.pipe(Stream.decodeText(), Stream.mkString), handle.stderr.pipe(Stream.decodeText(), Stream.mkString), handle.exitCode], { concurrency: 3 });
-			return { stdout, stderr, exitCode: Number(exitCode) };
+			const handle = yield* spawner.spawn(ChildProcess.make(options.cmd, options.args, { cwd: options.cwd ?? repoRoot, env: options.env, extendEnv: true }));
+			const [stdout, stderr, exitCode] = yield* Effect.all([Stream.runCollect(handle.stdout), Stream.runCollect(handle.stderr), handle.exitCode], { concurrency: 3 });
+			return { stdout: concatChunks(stdout), stderr: concatChunks(stderr), exitCode: Number(exitCode) };
 		}),
+	);
+
+export const runProcessCapture = (options: CaptureProcessOptions) =>
+	runProcessCaptureBytes(options).pipe(
+		Effect.map(({ stdout, stderr, exitCode }) => ({
+			stdout: new TextDecoder().decode(stdout),
+			stderr: new TextDecoder().decode(stderr),
+			exitCode,
+		})),
 	);
