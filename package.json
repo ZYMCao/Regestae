@@ -11,15 +11,15 @@
 	},
 	"devDependencies": {
 		"@effect/platform-node": "^4.0.0-rc.0",
-		"@effect/tsgo": "0.45.0",
+		"@effect/tsgo": "0.46.1",
 		"@types/bun": "~1",
 		"@types/node": "~24",
 		"@types/pixelmatch": "~5",
 		"@types/pngjs": "^6",
 		"eslint-plugin-no-comments": "^1.2.1",
-		"oxlint": "1.82.0",
+		"oxlint": "1.85.0",
 		"oxlint-plugin-eslint": "~1",
-		"oxlint-tsgolint": "7.0.2001",
+		"oxlint-tsgolint": "7.0.2003",
 		"pixelmatch": "^5.3.0",
 		"playwright": "~1",
 		"pngjs": "~7",
@@ -27,7 +27,7 @@
 		"tslib": "~2",
 		"typescript": "~7",
 		"vite": "~8",
-		"vite-plus": "1.0.0-rc.0"
+		"vite-plus": "1.0.0-rc.1"
 	},
 	"dependencies": {
 		"@effect/platform-bun": "^4.0.0-rc.0",

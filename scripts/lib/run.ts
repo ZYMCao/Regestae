@@ -13,6 +13,7 @@ export interface TaskDeclaration {
 const DECLARATION_KEYS: readonly string[] = ["cache", "dependsOn", "args"];
 const DECLARATION_HINT = 'expected single-line "export const task = { cache?: boolean, dependsOn?: string[], args?: string[] };"';
 const TASK_DECLARATION = /export const task = (\{.*\});/g;
+const NOT_A_TASK = /\.(test|spec)\.ts$/;
 
 function splitDeclarationFields(literal: string): string[] {
 	const fields: string[] = [];
@@ -68,7 +69,7 @@ export function deriveTasks(root: string): TaskMap {
 	for (const e of fs.readdirSync(root, { withFileTypes: true })) {
 		if (!e.isDirectory() || e.name === "lib") continue;
 		for (const f of fs.readdirSync(path.join(root, e.name), { withFileTypes: true })) {
-			if (!f.isFile() || !f.name.endsWith(".ts")) continue;
+			if (!f.isFile() || !f.name.endsWith(".ts") || NOT_A_TASK.test(f.name)) continue;
 			const name = f.name.replace(/\.ts$/, "");
 			if (derived.has(name)) throw new Error(`[vite.config] duplicate task "${name}" in scripts/${e.name}/${f.name}`);
 			const file = `scripts/${e.name}/${f.name}`;
