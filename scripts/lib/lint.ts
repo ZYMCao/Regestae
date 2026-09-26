@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
-import type { OxlintConfig } from "oxlint";
+import type { OxlintConfig } from "vite-plus/lint";
 import { repoRoot } from "./paths.ts";
 
 export type RuleMap = NonNullable<OxlintConfig["rules"]>;
