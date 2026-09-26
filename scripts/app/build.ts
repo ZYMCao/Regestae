@@ -1,91 +1,81 @@
+import { BunRuntime, BunServices } from "@effect/platform-bun";
+import { Console, Effect, FileSystem, Path, PlatformError, Stream } from "effect";
+import { Command } from "effect/unstable/cli";
+import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process";
+import { repoRoot } from "../lib/paths.ts";
+import { runProcess } from "../lib/process.ts";
+import { failWith, VERSION } from "../lib/runtime.ts";
+
 export const task = { cache: true };
-
-import { execFile, spawn } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import { promisify } from "node:util";
-import { repoRoot } from "../lib/env.ts";
-
-const execFileAsync = promisify(execFile);
-
-const monolithicDir = path.resolve(repoRoot, "apps/monolithic");
-const serverOutputDir = path.resolve(monolithicDir, ".output/server");
 
 const CHECK_CONCURRENCY = 16;
 
-function walkMjs(dir: string): string[] {
-	const entries = fs.readdirSync(dir, { withFileTypes: true });
-	return entries.flatMap((entry) => {
-		const full = path.join(dir, entry.name);
-		if (entry.isDirectory()) return walkMjs(full);
-		return entry.name.endsWith(".mjs") ? [full] : [];
-	});
-}
-
-async function checkAll(files: string[]): Promise<Array<{ file: string; message: string }>> {
-	const failures: Array<{ file: string; message: string }> = [];
-	let cursor = 0;
-
-	async function worker() {
-		while (cursor < files.length) {
-			const file = files[cursor++];
-			try {
-				await execFileAsync("node", ["--check", file]);
-			} catch (err) {
-				const stderr = (err as { stderr?: string }).stderr ?? String(err);
-				failures.push({ file, message: stderr.split("\n").slice(0, 6).join("\n") });
+const walkMjs = (dir: string): Effect.Effect<Array<string>, PlatformError.PlatformError, FileSystem.FileSystem | Path.Path> =>
+	Effect.gen(function* () {
+		const fs = yield* FileSystem.FileSystem;
+		const pathService = yield* Path.Path;
+		const names = yield* fs.readDirectory(dir);
+		const files: string[] = [];
+		for (const name of names) {
+			const full = pathService.join(dir, name);
+			const info = yield* fs.stat(full);
+			if (info.type === "Directory") {
+				for (const nested of yield* walkMjs(full)) files.push(nested);
+			} else if (name.endsWith(".mjs")) {
+				files.push(full);
 			}
 		}
-	}
-
-	await Promise.all(Array.from({ length: Math.min(CHECK_CONCURRENCY, Math.max(files.length, 1)) }, worker));
-	return failures;
-}
-
-export async function checkServerOutput(targetDir: string): Promise<void> {
-	if (!fs.existsSync(targetDir)) {
-		throw new Error(`server output directory not found: ${targetDir}`);
-	}
-	const files = walkMjs(targetDir);
-	if (files.length === 0) {
-		throw new Error(`no .mjs modules found under ${targetDir}`);
-	}
-	const failures = await checkAll(files);
-	if (failures.length > 0) {
-		console.error(`Error: ${failures.length}/${files.length} server modules failed node --check. Build output is not servable.`);
-		for (const { file, message } of failures) {
-			console.error(`--- ${path.relative(repoRoot, file)}\n${message}`);
-		}
-		throw new Error(`${failures.length}/${files.length} server modules failed node --check`);
-	}
-	console.log(`Server output gate: ${files.length} modules passed node --check.`);
-}
-
-function run(cmd: string, args: string[], cwd: string): Promise<void> {
-	console.log(`$ ${cmd} ${args.join(" ")}  (cwd: ${path.relative(repoRoot, cwd) || "."})`);
-	return new Promise((resolve, reject) => {
-		const child = spawn(cmd, args, { cwd, stdio: "inherit" });
-		child.on("close", (code) => {
-			if (code === 0) {
-				resolve();
-			} else {
-				reject(new Error(`${cmd} ${args.join(" ")} exited with code ${code}`));
-			}
-		});
-		child.on("error", reject);
+		return files;
 	});
-}
 
-async function main() {
-	await run("vite", ["build"], monolithicDir);
-	await run("bun", ["install", "--production"], serverOutputDir);
-	await checkServerOutput(serverOutputDir);
-}
+const check = (file: string) =>
+	Effect.scoped(
+		Effect.gen(function* () {
+			const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
+			const handle = yield* spawner.spawn(ChildProcess.make("node", ["--check", file]));
+			const [output, exitCode] = yield* Effect.all([handle.all.pipe(Stream.decodeText(), Stream.mkString), handle.exitCode], { concurrency: 2 });
+			return { file, code: Number(exitCode), output };
+		}),
+	);
+
+export const checkServerOutput = (targetDir: string) =>
+	Effect.gen(function* () {
+		const fs = yield* FileSystem.FileSystem;
+		const path = yield* Path.Path;
+		if (!(yield* fs.exists(targetDir))) return yield* failWith(`Error: server output directory not found: ${targetDir}`);
+		const files = yield* walkMjs(targetDir);
+		if (files.length === 0) return yield* failWith(`Error: no .mjs modules found under ${targetDir}`);
+
+		const results = yield* Effect.forEach(files, check, { concurrency: CHECK_CONCURRENCY });
+		const failures = results.filter((result) => result.code !== 0).map((result) => ({ file: result.file, message: result.output.split("\n").slice(0, 6).join("\n") }));
+
+		if (failures.length > 0) {
+			yield* Console.error(`Error: ${failures.length}/${files.length} server modules failed node --check. Build output is not servable.`);
+			yield* Effect.forEach(failures, ({ file, message }) => Console.error(`--- ${path.relative(repoRoot, file)}\n${message}`), { discard: true });
+			return yield* failWith(`Error: ${failures.length}/${files.length} server modules failed node --check`);
+		}
+
+		yield* Console.log(`Server output gate: ${files.length} modules passed node --check.`);
+	});
+
+const run = (cmd: string, args: string[], cwd: string) =>
+	Effect.gen(function* () {
+		const path = yield* Path.Path;
+		yield* Console.log(`$ ${cmd} ${args.join(" ")}  (cwd: ${path.relative(repoRoot, cwd) || "."})`);
+		yield* runProcess({ cmd, args, cwd });
+	}).pipe(Effect.catchTag("TaskFailure", (error) => Console.error(`Error: ${cmd} ${args.join(" ")} exited with code ${error.code}`).pipe(Effect.andThen(Effect.fail(error)))));
+
+const command = Command.make("build", {}, () =>
+	Effect.gen(function* () {
+		const path = yield* Path.Path;
+		const monolithicDir = path.resolve(repoRoot, "apps/monolithic");
+		const serverOutputDir = path.resolve(monolithicDir, ".output/server");
+		yield* run("vite", ["build"], monolithicDir);
+		yield* run("bun", ["install", "--production"], serverOutputDir);
+		yield* checkServerOutput(serverOutputDir);
+	}),
+);
 
 if (import.meta.main) {
-	main().catch((err) => {
-		console.error(`Error: ${err instanceof Error ? err.message : err}`);
-		process.exit(1);
-	});
+	BunRuntime.runMain(command.pipe(Command.run({ version: VERSION }), Effect.provide(BunServices.layer)));
 }

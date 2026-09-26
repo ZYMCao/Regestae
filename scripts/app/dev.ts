@@ -1,23 +1,28 @@
-import path from "node:path";
-import process from "node:process";
-import { loadLocalEnv, repoRoot } from "../lib/env.ts";
-import { runProcess } from "../lib/spawn.ts";
-import { parseServeArgs, resolveApp, viteBin } from "../lib/serve.ts";
+import { BunRuntime, BunServices } from "@effect/platform-bun";
+import { Effect, Option, Path } from "effect";
+import { Command } from "effect/unstable/cli";
+import { resolveApp } from "../lib/apps.ts";
+import { loadEnvironmentProfile } from "../lib/config.ts";
+import { appFlag, envFlag, passthrough, portFlag } from "../lib/flag.ts";
+import { repoRoot, viteBin } from "../lib/paths.ts";
+import { runProcess } from "../lib/process.ts";
+import { VERSION } from "../lib/runtime.ts";
 
-async function main() {
-	const { app: appInput, env, port, passthrough } = parseServeArgs(process.argv.slice(2));
-	const app = resolveApp(appInput);
+const command = Command.make("dev", { app: appFlag, env: envFlag, port: portFlag, arguments: passthrough }, ({ app, env, port, arguments: rest }) =>
+	Effect.gen(function* () {
+		const resolved = yield* resolveApp(Option.getOrUndefined(app));
+		const envVars = yield* loadEnvironmentProfile(env);
+		const path = yield* Path.Path;
+		yield* runProcess({
+			cmd: viteBin,
+			args: ["dev", ...(Option.isSome(port) ? ["--port", port.value] : []), ...rest],
+			cwd: path.resolve(repoRoot, "apps", resolved),
+			env: envVars,
+			logFileName: `${resolved}.${env}.log`,
+		});
+	}),
+);
 
-	await runProcess({
-		cmd: viteBin,
-		args: ["dev", ...(port ? ["--port", port] : []), ...passthrough],
-		cwd: path.resolve(repoRoot, "apps", app),
-		env: env === "inherit" ? {} : loadLocalEnv(env),
-		logFileName: `${app}.${env}.log`,
-	});
+if (import.meta.main) {
+	BunRuntime.runMain(command.pipe(Command.run({ version: VERSION }), Effect.provide(BunServices.layer)));
 }
-
-main().catch((err) => {
-	console.error("Dev Runner error:", err);
-	process.exit(1);
-});

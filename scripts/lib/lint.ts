@@ -2,19 +2,22 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import type { OxlintConfig } from "oxlint";
-import { repoRoot } from "./env.ts";
+import { repoRoot } from "./paths.ts";
 
 export type RuleMap = NonNullable<OxlintConfig["rules"]>;
 export type PluginList = NonNullable<OxlintConfig["plugins"]>;
+export type OverrideList = NonNullable<OxlintConfig["overrides"]>;
 
 const require = createRequire(import.meta.url);
 
-const RULE_FILE_KEYS = new Set(["presets", "plugins", "rule"]);
+const RULE_FILE_KEYS = new Set(["presets", "plugins", "rule", "overrides"]);
+const OVERRIDE_KEYS = new Set(["files", "rule"]);
 
 interface RuleFile {
 	presets?: string[];
 	plugins?: string[];
 	rule?: RuleMap;
+	overrides?: unknown[];
 }
 
 function loadRuleFile(file: string): RuleFile {
@@ -70,4 +73,25 @@ export function derivePlugins(root: string): PluginList {
 		collect(declared.plugins ?? []);
 	}
 	return plugins as PluginList;
+}
+
+function loadOverride(value: unknown, file: string): OverrideList[number] {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) throw new Error(`[vite.config] override in ${file} must be an object`);
+	const declared = value as Record<string, unknown>;
+	for (const key of Object.keys(declared)) {
+		if (!OVERRIDE_KEYS.has(key)) throw new Error(`[vite.config] unknown override key "${key}" in ${file} — allowed: ${[...OVERRIDE_KEYS].join(", ")}`);
+	}
+	const files = declared.files;
+	if (!Array.isArray(files) || files.length === 0 || files.some((pattern) => typeof pattern !== "string")) {
+		throw new Error(`[vite.config] override in ${file} requires a non-empty "files" string array`);
+	}
+	return { files: files as string[], rules: declared.rule as RuleMap | undefined };
+}
+
+export function deriveOverrides(root: string): OverrideList {
+	const overrides: OverrideList = [];
+	for (const file of ruleFiles(root)) {
+		for (const entry of loadRuleFile(file).overrides ?? []) overrides.push(loadOverride(entry, file));
+	}
+	return overrides;
 }

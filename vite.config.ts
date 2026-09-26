@@ -1,5 +1,5 @@
 import { defineConfig } from "vite-plus";
-import { derivePlugins, deriveRules } from "./scripts/lib/lint.ts";
+import { deriveOverrides, derivePlugins, deriveRules } from "./scripts/lib/lint.ts";
 import { deriveTasks } from "./scripts/lib/run.ts";
 
 export default defineConfig({
@@ -39,6 +39,7 @@ export default defineConfig({
 			},
 		],
 		rules: deriveRules("rules"),
+		overrides: deriveOverrides("rules"),
 	},
 	run: {
 		cache: {

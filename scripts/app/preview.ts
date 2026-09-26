@@ -1,42 +1,44 @@
 export const task = { dependsOn: ["build"] };
 
-import { existsSync } from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import { loadLocalEnv, repoRoot } from "../lib/env.ts";
-import { runProcess } from "../lib/spawn.ts";
-import { parseServeArgs, resolveApp } from "../lib/serve.ts";
+import { BunRuntime, BunServices } from "@effect/platform-bun";
+import { Effect, FileSystem, Option, Path } from "effect";
+import { Command } from "effect/unstable/cli";
+import { resolveApp } from "../lib/apps.ts";
+import { loadEnvironmentProfile } from "../lib/config.ts";
+import { appFlag, envFlag, passthrough, portFlag } from "../lib/flag.ts";
+import { repoRoot } from "../lib/paths.ts";
+import { runProcess } from "../lib/process.ts";
+import { failWith, VERSION } from "../lib/runtime.ts";
 
 const PREVIEW_APP = "monolithic";
 const DEFAULT_PORT = "3000";
 
-async function main() {
-	const { app: appInput, env, port, passthrough } = parseServeArgs(process.argv.slice(2));
-	const app = resolveApp(appInput);
-	if (app !== PREVIEW_APP) {
-		console.error(`Error: '${app}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/app/build.ts to make it previewable.`);
-		process.exit(1);
-	}
+const command = Command.make("preview", { app: appFlag, env: envFlag, port: portFlag, arguments: passthrough }, ({ app, env, port, arguments: rest }) =>
+	Effect.gen(function* () {
+		const resolved = yield* resolveApp(Option.getOrUndefined(app));
+		if (resolved !== PREVIEW_APP) {
+			return yield* failWith(`Error: '${resolved}' has no production build. The 'build' task produces only apps/${PREVIEW_APP}; add the app to scripts/app/build.ts to make it previewable.`);
+		}
 
-	const serverDir = path.resolve(repoRoot, "apps", app, ".output", "server");
-	const entry = path.join(serverDir, "index.mjs");
-	if (!existsSync(entry)) {
-		console.error(`Error: missing build output at ${path.relative(repoRoot, entry)}. Run 'vp run build' first.`);
-		process.exit(1);
-	}
+		const path = yield* Path.Path;
+		const serverDir = path.resolve(repoRoot, "apps", resolved, ".output", "server");
+		const entry = path.join(serverDir, "index.mjs");
+		const fs = yield* FileSystem.FileSystem;
+		if (!(yield* fs.exists(entry))) {
+			return yield* failWith(`Error: missing build output at ${path.relative(repoRoot, entry)}. Run 'vp run build' first.`);
+		}
 
-	const envVars = env === "inherit" ? {} : loadLocalEnv(env);
+		const envVars = yield* loadEnvironmentProfile(env);
+		yield* runProcess({
+			cmd: "node",
+			args: [entry, ...rest],
+			cwd: serverDir,
+			env: { PORT: DEFAULT_PORT, ...envVars, ...(Option.isSome(port) ? { PORT: port.value } : {}) },
+			logFileName: `${resolved}.${env}.preview.log`,
+		});
+	}),
+);
 
-	await runProcess({
-		cmd: "node",
-		args: [entry, ...passthrough],
-		cwd: serverDir,
-		env: { PORT: DEFAULT_PORT, ...envVars, ...(port ? { PORT: port } : {}) },
-		logFileName: `${app}.${env}.preview.log`,
-	});
+if (import.meta.main) {
+	BunRuntime.runMain(command.pipe(Command.run({ version: VERSION }), Effect.provide(BunServices.layer)));
 }
-
-main().catch((err) => {
-	console.error("Preview Runner error:", err);
-	process.exit(1);
-});

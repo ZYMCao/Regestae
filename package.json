@@ -23,7 +23,8 @@
 		"vite-plus": "1.0.0-rc.0"
 	},
 	"dependencies": {
-		"effect": "^4.0.0-rc.0"
+		"@effect/platform-bun": "4.0.0-rc.117",
+		"effect": "4.0.0-rc.117"
 	},
 	"engines": {
 		"node": ">=24"
